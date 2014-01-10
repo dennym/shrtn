@@ -17,7 +17,7 @@ get '/' do
 end
 
 get '/list' do
-	@urls = redis.get "links:*"
+	@urls = redis.LRANGE("links", 0, -1)
 	erb :list
 end
 

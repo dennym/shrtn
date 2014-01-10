@@ -9,8 +9,8 @@
             <% for links in @urls %>
             <tr>
                 <td>
-                    <a href="<%= urls.shortcode %>">
-                        <%= shorturl.shortcode %>
+                    <a href="<%= link.shortcode %>">
+                        <%= link.shortcode %>
                     </a>
                 </td>
 
@@ -18,6 +18,6 @@
             <% end %>
         </table>
     <% else %>
-        <p>No shrls yet!</p>
+        <p>Nothing avaible at the moment!</p>
     <% end %>
 </div>
