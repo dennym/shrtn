@@ -16,6 +16,11 @@ get '/' do
   erb :index
 end
 
+get '/list' do
+	@urls = redis.get "links:*"
+	erb :list
+end
+
 post '/' do
   if params[:url] and not params[:url].empty?
     @shortcode = random_string 5
@@ -29,7 +34,3 @@ get '/:shortcode' do
   redirect @url || '/'
 end
 
-get '/list' do
-	@urls = redis.get "links:*"
-	erb :list
-end
