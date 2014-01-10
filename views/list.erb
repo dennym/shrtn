@@ -1,24 +1,4 @@
 <div id="list">
-    <% if !@urls.empty? %>
-        <%= @amount %>
-        <table>
-            <tr>
-                <th>shrtn</th>
-                <th>clicks</th>
-                <th>destination</th>
-            </tr>
-            <% for links in @urls %>
-            <tr>
-                <td>
-                    <a href="<%= links.shortcode %>">
-                        <%= links.shortcode %>
-                    </a>
-                </td>
-
-            </tr>
-            <% end %>
-        </table>
-    <% else %>
-        <p>Nothing avaible at the moment!</p>
-    <% end %>
+    <%= @amount %>
+    <%= @urls %>
 </div>

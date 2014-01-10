@@ -12,13 +12,17 @@ helpers do
   end
 end
 
+before do
+  @amount = redis.LLEN("links:")
+  @title = "shrtn » url shortener"
+end
+
 get '/' do
   erb :index
 end
 
 get '/list' do
-	@amount = r.LLEN("links")
-	@urls = redis.LRANGE("links", 0, -1)
+	@urls = redis.keys('links:*')
 	erb :list
 end
 
