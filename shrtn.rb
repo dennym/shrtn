@@ -14,9 +14,6 @@ end
 
 before do
   @title = "shrtn » url shortener"
-  redis.pipelined do
-  	redis.keys "links:*"
-	end
 end
 
 get '/' do
@@ -24,14 +21,14 @@ get '/' do
 end
 
 get '/list' do
-	@urls = redis.('links:*')
+	@urls = redis.keys('*')
 	erb :list
 end
 
 post '/' do
   if params[:url] and not params[:url].empty?
     @shortcode = random_string 5
-    redis.setnx "#{@shortcode}", params[:url]
+    redis.setnx "links:#{@shortcode}", params[:url]
     redis.setnx "clicks:#{@shortcode}", "0"
   end
   erb :index
@@ -39,7 +36,7 @@ end
 
 get '/:shortcode' do
   redis.incr "clicks:#{params[:shortcode]}"
-  @url = redis.get "#{params[:shortcode]}"
+  @url = redis.get "links:#{params[:shortcode]}"
   redirect @url || '/'
 end
 
