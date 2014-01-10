@@ -13,7 +13,7 @@ helpers do
 end
 
 get '/' do
-  erb :index
+  erb :app
 end
 
 post '/' do
@@ -21,7 +21,7 @@ post '/' do
     @shortcode = random_string 5
     redis.setnx "links:#{@shortcode}", params[:url]
   end
-  erb :index
+  erb :app
 end
 
 get '/:shortcode' do
