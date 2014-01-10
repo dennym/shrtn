@@ -20,9 +20,9 @@ get '/' do
   erb :index
 end
 
-get '/list' do
+get '/admin' do
 	@urls = redis.eval("return #redis.call('keys', 'links:*')")
-	erb :list
+	erb :admin
 end
 
 post '/' do
