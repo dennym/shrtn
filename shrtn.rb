@@ -28,15 +28,19 @@ end
 post '/' do
   if params[:url] and not params[:url].empty?
     @shortcode = random_string 5
-    redis.set "links:#{@shortcode}", params[:url], :nx => true, :ex => 20 
-    redis.setnx "clicks:#{@shortcode}", "0"
+    redis.multi do
+    	redis.set "links:#{@shortcode}", params[:url], :nx => true, :ex => 20 
+  		redis.set "clicks:#{@shortcode}", "0", :nx => true, :ex => 20 
+  	end
   end
   erb :index
 end
 
 get '/:shortcode' do
-  redis.incr "clicks:#{params[:shortcode]}"
-  @url = redis.get "links:#{params[:shortcode]}"
+	redis.multi do
+  	redis.incr "clicks:#{params[:shortcode]}"
+  	@url = redis.get "links:#{params[:shortcode]}"
+  end
   redirect @url || '/'
 end
 
