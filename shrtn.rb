@@ -20,11 +20,6 @@ get '/' do
   erb :index
 end
 
-get '/admin' do
-	@amount = redis.eval("return #redis.call('keys', 'links:*')")
-	erb :admin
-end
-
 post '/' do
   if params[:url] and not params[:url].empty?
     @shortcode = random_string 5
@@ -34,6 +29,11 @@ post '/' do
   	end
   end
   erb :index
+end
+
+get '/admin' do
+	@amount = redis.eval("return #redis.call('keys', 'links:*')")
+	erb :admin
 end
 
 get '/:shortcode' do
