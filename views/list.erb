@@ -1,5 +1,6 @@
 <div id="list">
     <% if !@urls.empty? %>
+        <%= @amount %>
         <table>
             <tr>
                 <th>shrtn</th>
@@ -9,8 +10,8 @@
             <% for links in @urls %>
             <tr>
                 <td>
-                    <a href="<%= link.shortcode %>">
-                        <%= link.shortcode %>
+                    <a href="<%= links.shortcode %>">
+                        <%= links.shortcode %>
                     </a>
                 </td>
 

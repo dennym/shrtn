@@ -17,6 +17,7 @@ get '/' do
 end
 
 get '/list' do
+	@amount = r.LLEN("links")
 	@urls = redis.LRANGE("links", 0, -1)
 	erb :list
 end
