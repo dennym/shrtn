@@ -47,9 +47,9 @@ end
 
 get '/:shortcode' do
 	@url = redis.get "links:#{params[:shortcode]}"
-	unless @url.nil?
+	if !@url.nil?
 		redis.incr "clicks:#{params[:shortcode]}"
-		redirect to @url
+		redirect @url
 	else
 		redirect '/'
 	end
