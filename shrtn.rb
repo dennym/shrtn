@@ -21,7 +21,7 @@ get '/' do
 end
 
 get '/list' do
-	@urls = redis.keys('*')
+	@urls = redis.eval("return #redis.call('keys', 'links:*')")
 	erb :list
 end
 
