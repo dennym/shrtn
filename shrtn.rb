@@ -10,10 +10,10 @@ helpers do
   def random_string(length)
     rand(36**length).to_s(36)
   end
-end
 
-before do
-  @title = "shrtn » url shortener"
+  def get_site_url(short_url)
+		SiteConfig.url_base + short_url
+	end
 end
 
 get '/' do

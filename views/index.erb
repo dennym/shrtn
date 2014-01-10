@@ -6,7 +6,7 @@
 <% if @shortcode %>
 	<div class="result">
 		Your shortened URL is:
-		<a href="http://app.com/<%= @shortcode %>">http://app.com/<%= @shortcode %></a>
+		<a href="<%= get_site_url(@shortcode) %>"><%= get_site_url(@shortcode) %></a>
 	</div>
 <% end %>
 
