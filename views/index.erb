@@ -1,21 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>shrtn</title>
-</head>
-<body>
-	<div class="container">
-		<h1>shrtn</h1>
-		<form method="post">
-			<input type="text" value="<%= h(params[:url]) %>" name="url" id="url" />
-			<input type="submit" value="shorten" id="submit" />
-		</form>
-		<div class="clear"></div>
-		<% if @shortcode %>
-		<div class="result">
-			Your shortened URL is:
-			<a href="http://app.com/<%= @shortcode %>">http://app.com/<%= @shortcode %></a>
-		</div>
-		<% end %>
-	</div>
-</body>
+<form method="post">
+	<input type="text" value="<%= h(params[:url]) %>" name="url" id="url" />
+	<input type="submit" value="shorten" id="submit" />
+</form>
+<div class="clear"></div>
+<% if @shortcode %>
+<div class="result">
+	Your shortened URL is:
+	<a href="http://app.com/<%= @shortcode %>">http://app.com/<%= @shortcode %></a>
+</div>
+<% end %>
+
