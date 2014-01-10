@@ -46,9 +46,11 @@ get '/admin' do
 end
 
 get '/:shortcode' do
-	redis.pipelined do
+	@url = redis.get "links:#{params[:shortcode]}"
+	unless @url.nil?
 		redis.incr "clicks:#{params[:shortcode]}"
-		@url = redis.get "links:#{params[:shortcode]}"
+		redirect to @url
+	else
+		redirect '/'
 	end
-	redirect @url.value || '/'
 end
