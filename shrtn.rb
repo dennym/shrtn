@@ -43,12 +43,14 @@ post '/' do
 end
 
 get '/admin' do
-	@amount = r.eval("return #redis.call('keys', 'links:*')")
+	@count = r.eval("return #redis.call('keys', 'links:*')")
 	@url_shortcodes = r.keys("links:*")
-	@clicks = []
+	@clicks = [] ; @urls = [] ; @timeouts = [] #init arrays
 	@url_shortcodes.each do |x|
 		x.slice! "links:"
+		@urls << r.get("links:#{x}")
 		@clicks << r.get("clicks:#{x}")
+		@timeouts << r.ttl("links:#{x}")
 	end
 	erb :admin
 end

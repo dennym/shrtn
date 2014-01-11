@@ -5,10 +5,14 @@
 			<th>shortcode</th>
 			<th>url</th>
 			<th>clicks</th>
+			<th>timeout</th>
 		</tr>
-	<% @url_shortcodes.each do |x| %>
+	<% @count.times do |n| %>
 		<tr>
-			<td><%= x %></td>
+			<td><%= @url_shortcodes[n] %></td>
+			<td><%= @urls[n] %></td>
+			<td><%= @clicks[n] %></td>
+			<td><%= @timeouts[n] %></td>
 		</tr>
 	<% end %>
 	</table>
