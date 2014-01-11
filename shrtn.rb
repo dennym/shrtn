@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'redis'
-require 'sinatra-flash'
+require 'sinatra/flash'
 
 configure do
 	SiteConfig = OpenStruct.new(
@@ -65,7 +65,8 @@ post '/login' do
       response.set_cookie(SiteConfig.username,SiteConfig.token) 
       redirect '/admin'
     else
-      "Username or Password incorrect"
+      flash.now[:error] = "Wrong Login Data!"
+      redirect '/login'
     end
 end
 
@@ -94,6 +95,7 @@ get '/:shortcode' do
 		r.incr "clicks:#{params[:shortcode]}"
 		redirect @url
 	else
+		flash.now[:error] = "Not available"
 		redirect '/'
 	end
 end
