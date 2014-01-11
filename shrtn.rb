@@ -13,6 +13,8 @@ configure do
 	)
 end
 
+enable :sessions
+
 r = Redis.new
 
 helpers do
