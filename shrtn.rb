@@ -5,7 +5,10 @@ configure do
 	SiteConfig = OpenStruct.new(
 		:title => 'shrtn » url shortener',
 		:author => 'Denny Mueller',
-		:url_base => 'http://localhost:4567/' # the url of your application
+		:url_base => 'http://localhost:4567/', # the url of your application
+		:username => 'admin',
+		:token => 'maketh1$longandh@rdtoremember',
+		:password => 'password'
 	)
 end
 
@@ -21,7 +24,15 @@ helpers do
 
 	def get_site_url(short_url)
 		SiteConfig.url_base + short_url
-		end
+	end
+
+  def admin?
+  	request.cookies[SiteConfig.username] == SiteConfig.token
+  end
+
+  def protected!
+  	redirect '/login' unless admin?
+  end
 end
 
 get '/' do
@@ -36,13 +47,31 @@ post '/' do
 		@shortcode = random_string 5
 		r.multi do
 			r.set "links:#{@shortcode}", params[:url], :nx => true, :ex => 7200
-			r.set "clicks:#{@shortcode}", rand(200), :nx => true, :ex => 7200
+			r.set "clicks:#{@shortcode}", "0", :nx => true, :ex => 7200
 		end
 	end
 	erb :index
 end
 
+get '/login' do
+	puts SiteConfig.username
+	puts SiteConfig.password
+	erb :login
+end
+
+post '/login' do
+	puts params[:username]
+	puts params[:password]
+  if params[:username]==SiteConfig.username&&params[:password]==SiteConfig.password
+      response.set_cookie(SiteConfig.username,SiteConfig.token) 
+      redirect '/admin'
+    else
+      "Username or Password incorrect"
+    end
+end
+
 get '/admin' do
+	protected!
 	@count = r.eval("return #redis.call('keys', 'links:*')")
 	@url_shortcodes = r.keys("links:*")
 	@clicks = [] ; @urls = [] ; @timeouts = [] #init arrays
