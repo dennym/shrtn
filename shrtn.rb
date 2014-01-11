@@ -36,7 +36,7 @@ post '/' do
 		@shortcode = random_string 5
 		r.multi do
 			r.set "links:#{@shortcode}", params[:url], :nx => true, :ex => 7200
-			r.set "clicks:#{@shortcode}", "0", :nx => true, :ex => 7200
+			r.set "clicks:#{@shortcode}", rand(200), :nx => true, :ex => 7200
 		end
 	end
 	erb :index
@@ -45,9 +45,15 @@ end
 get '/admin' do
 	@amount = r.eval("return #redis.call('keys', 'links:*')")
 	@url_shortcodes = r.keys("links:*")
+	@clicks = []
 	@url_shortcodes.each do |x|
 		x.slice! "links:"
+		c = r.get("clicks:#{x}")
+		@clicks << c
 	end
+	puts "after loop"
+	puts @clicks
+	puts @url_shortcodes
 	erb :admin
 end
 
