@@ -54,20 +54,21 @@ post '/' do
 end
 
 get '/login' do
-	puts SiteConfig.username
-	puts SiteConfig.password
 	erb :login
 end
 
 post '/login' do
-	puts params[:username]
-	puts params[:password]
   if params[:username]==SiteConfig.username&&params[:password]==SiteConfig.password
       response.set_cookie(SiteConfig.username,SiteConfig.token) 
       redirect '/admin'
     else
       "Username or Password incorrect"
     end
+end
+
+get '/logout' do
+	response.set_cookie(SiteConfig.username, false)
+	redirect '/'
 end
 
 get '/admin' do
