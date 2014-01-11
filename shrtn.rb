@@ -48,8 +48,7 @@ get '/admin' do
 	@clicks = []
 	@url_shortcodes.each do |x|
 		x.slice! "links:"
-		c = r.get("clicks:#{x}")
-		@clicks << c
+		@clicks << r.get("clicks:#{x}")
 	end
 	puts "after loop"
 	puts @clicks
