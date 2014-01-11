@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'redis'
+require 'sinatra-flash'
 
 configure do
 	SiteConfig = OpenStruct.new(
