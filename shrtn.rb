@@ -44,6 +44,7 @@ end
 
 get '/admin' do
 	@amount = r.eval("return #r.call('keys', 'links:*')")
+	@urls = r.keys("*")
 	erb :admin
 end
 
