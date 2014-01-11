@@ -50,9 +50,6 @@ get '/admin' do
 		x.slice! "links:"
 		@clicks << r.get("clicks:#{x}")
 	end
-	puts "after loop"
-	puts @clicks
-	puts @url_shortcodes
 	erb :admin
 end
 
