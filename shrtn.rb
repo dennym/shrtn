@@ -10,10 +10,12 @@ configure do
 		:username => 'admin',
 		:token => 'maketh1$longandh@rdtoremember',
 		:password => 'password'
+		
 	)
 end
 
 enable :sessions
+set :session_secret, '*&(^B234'
 
 r = Redis.new
 
@@ -65,8 +67,8 @@ post '/login' do
       response.set_cookie(SiteConfig.username,SiteConfig.token) 
       redirect '/admin'
     else
-      flash.now[:error] = "Wrong Login Data!"
-      redirect '/login'
+      flash[:error] = "Wrong Login Data!"
+      redirect '/admin'
     end
 end
 
@@ -95,7 +97,7 @@ get '/:shortcode' do
 		r.incr "clicks:#{params[:shortcode]}"
 		redirect @url
 	else
-		flash.now[:error] = "Not available"
+		flash[:error] = "Not available"
 		redirect '/'
 	end
 end
