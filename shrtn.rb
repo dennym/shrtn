@@ -2,15 +2,14 @@ require 'sinatra'
 require 'redis'
 
 configure do
-
 	SiteConfig = OpenStruct.new(
-					:title => 'shrtn » url shortener',
-					:author => 'Denny Mueller',
-					:url_base => 'http://localhost:4567/' # the url of your application
-				)
+		:title => 'shrtn » url shortener',
+		:author => 'Denny Mueller',
+		:url_base => 'http://localhost:4567/' # the url of your application
+	)
 end
 
-redis = Redis.new
+r = Redis.new
 
 helpers do
 	include Rack::Utils
@@ -35,23 +34,23 @@ post '/' do
 			params[:url] = "http://#{params[:url]}"
 		end
 		@shortcode = random_string 5
-		redis.multi do
-			redis.set "links:#{@shortcode}", params[:url], :nx => true, :ex => 400
-			redis.set "clicks:#{@shortcode}", "0", :nx => true, :ex => 400
+		r.multi do
+			r.set "links:#{@shortcode}", params[:url], :nx => true, :ex => 400
+			r.set "clicks:#{@shortcode}", "0", :nx => true, :ex => 400
 		end
 	end
 	erb :index
 end
 
 get '/admin' do
-	@amount = redis.eval("return #redis.call('keys', 'links:*')")
+	@amount = r.eval("return #r.call('keys', 'links:*')")
 	erb :admin
 end
 
 get '/:shortcode' do
-	@url = redis.get "links:#{params[:shortcode]}"
+	@url = r.get "links:#{params[:shortcode]}"
 	if !@url.nil?
-		redis.incr "clicks:#{params[:shortcode]}"
+		r.incr "clicks:#{params[:shortcode]}"
 		redirect @url
 	else
 		redirect '/'
