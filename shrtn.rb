@@ -45,6 +45,9 @@ end
 get '/admin' do
 	@amount = r.eval("return #redis.call('keys', 'links:*')")
 	@url_shortcodes = r.keys("links:*")
+	@url_shortcodes.each do |x|
+		x.slice! "links:"
+	end
 	erb :admin
 end
 
