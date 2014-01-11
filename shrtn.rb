@@ -31,6 +31,9 @@ end
 
 post '/' do
 	if params[:url] and not params[:url].empty?
+		unless params[:url] =~ /[a-zA-Z]+:\/\/.*/
+			params[:url] = "http://#{params[:url]}"
+		end
 		@shortcode = random_string 5
 		redis.multi do
 			redis.set "links:#{@shortcode}", params[:url], :nx => true, :ex => 400
