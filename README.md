@@ -16,3 +16,8 @@ sudo make install
 bundle install
 ruby shrtn
 ```
+
+### TODO
+- tests
+- addparameter options for custom expire and/or click limit
+- design
