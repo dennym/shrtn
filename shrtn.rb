@@ -10,7 +10,6 @@ configure do
 		:username => 'admin',
 		:token => 'maketh1$longandh@rdtoremember',
 		:password => 'password'
-		
 	)
 end
 
