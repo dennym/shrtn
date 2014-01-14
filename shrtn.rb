@@ -47,14 +47,18 @@ post '/' do
 	if params[:url] and not params[:url].empty?
 		unless params[:url] =~ /[a-zA-Z]+:\/\/.*/
 			seconds = 60
-			params[:url] = "http://#{params[:url]}"
-			expire = params[:url].match(/\+(\d+)min/)[1]
-			@expire = expire*seconds
+			unless params[:url] =~ /\+(\d+)min/
+				expire = 259200 # seconds have 3 days 
+			else
+				expire = params[:url].match(/\+(\d+)min/)[1]
+			end
+			params[:url] = "http://#{params[:url]}".gsub(/\+(\d+)min/,"")
+			expire = expire.to_i*seconds
 		end
 		@shortcode = random_string 5
 		r.multi do
-			r.set "links:#{@shortcode}", params[:url], :nx => true, :ex => @expire
-			r.set "clicks:#{@shortcode}", "0", :nx => true, :ex => @expire
+			r.set "links:#{@shortcode}", params[:url], :nx => true, :ex => expire
+			r.set "clicks:#{@shortcode}", "0", :nx => true, :ex => expire
 		end
 	end
 	erb :index
@@ -81,6 +85,7 @@ end
 
 get '/admin' do
 	protected!
+	seconds = 60
 	@count = r.eval("return #redis.call('keys', 'links:*')")
 	@url_shortcodes = r.keys("links:*")
 	@clicks = [] ; @urls = [] ; @timeouts = [] #init arrays
@@ -88,7 +93,7 @@ get '/admin' do
 		shortcode.slice! "links:"
 		@urls << r.get("links:#{shortcode}")
 		@clicks << r.get("clicks:#{shortcode}")
-		@timeouts << r.ttl("links:#{shortcode}")
+		@timeouts << (r.ttl("links:#{shortcode}"))/seconds
 	end
 	erb :admin
 end
