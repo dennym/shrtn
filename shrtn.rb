@@ -46,12 +46,15 @@ end
 post '/' do
 	if params[:url] and not params[:url].empty?
 		unless params[:url] =~ /[a-zA-Z]+:\/\/.*/
+			seconds = 60
 			params[:url] = "http://#{params[:url]}"
+			expire = params[:url].match(/\+(\d+)min/)[1]
+			@expire = expire*seconds
 		end
 		@shortcode = random_string 5
 		r.multi do
-			r.set "links:#{@shortcode}", params[:url], :nx => true, :ex => 7200
-			r.set "clicks:#{@shortcode}", "0", :nx => true, :ex => 7200
+			r.set "links:#{@shortcode}", params[:url], :nx => true, :ex => @expire
+			r.set "clicks:#{@shortcode}", "0", :nx => true, :ex => @expire
 		end
 	end
 	erb :index
