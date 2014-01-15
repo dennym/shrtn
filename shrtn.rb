@@ -104,7 +104,7 @@ get '/:shortcode' do
 		r.incr "clicks:#{params[:shortcode]}"
 		redirect @url
 	else
-		flash[:error] = "Not available"
+		flash[:error] = "Ups, Something went wrong!"
 		redirect '/'
 	end
 end
