@@ -30,13 +30,13 @@ helpers do
 		SiteConfig.url_base + short_url
 	end
 
-  def admin?
-  	request.cookies[SiteConfig.username] == SiteConfig.token
-  end
+	def admin?
+		request.cookies[SiteConfig.username] == SiteConfig.token
+	end
 
-  def protected!
-  	redirect '/login' unless admin?
-  end
+	def protected!
+		redirect '/login' unless admin?
+	end
 end
 
 get '/' do
@@ -69,13 +69,13 @@ get '/login' do
 end
 
 post '/login' do
-  if params[:username]==SiteConfig.username&&params[:password]==SiteConfig.password
-      response.set_cookie(SiteConfig.username,SiteConfig.token) 
-      redirect '/admin'
-    else
-      flash[:error] = "Wrong Login Data!"
-      redirect '/admin'
-    end
+	if params[:username]==SiteConfig.username&&params[:password]==SiteConfig.password
+			response.set_cookie(SiteConfig.username,SiteConfig.token) 
+			redirect '/admin'
+		else
+			flash[:error] = "Wrong Login Data!"
+			redirect '/admin'
+		end
 end
 
 get '/logout' do
