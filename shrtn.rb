@@ -93,7 +93,7 @@ get '/admin' do
 		shortcode.slice! "links:"
 		@urls << r.GET("links:#{shortcode}")
 		@clicks << r.GET("clicks:#{shortcode}")
-		@timeouts << (r.TTL("links:#{shortcode}"))/seconds
+		@timeouts << r.TTL("links:#{shortcode}"))/seconds
 	end
 	erb :admin
 end
