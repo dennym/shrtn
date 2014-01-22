@@ -56,9 +56,9 @@ post '/' do
 			expire = expire.to_i*seconds
 		end
 		@shortcode = random_string 5
-		r.multi do
-			r.set "links:#{@shortcode}", params[:url], :nx => true, :ex => expire
-			r.set "clicks:#{@shortcode}", "0", :nx => true, :ex => expire
+		r.MULTI do
+			r.SET "links:#{@shortcode}", params[:url], :nx => true, :ex => expire
+			r.SET "clicks:#{@shortcode}", "0", :nx => true, :ex => expire
 		end
 	end
 	erb :index
@@ -86,22 +86,22 @@ end
 get '/admin' do
 	protected!
 	seconds = 60
-	@count = r.eval("return #redis.call('keys', 'links:*')")
-	@url_shortcodes = r.keys("links:*")
+	@count = r.EVAL("return #redis.call('keys', 'links:*')")
+	@url_shortcodes = r.KEYS("links:*")
 	@clicks = [] ; @urls = [] ; @timeouts = [] #init arrays
 	@url_shortcodes.each do |shortcode|
 		shortcode.slice! "links:"
-		@urls << r.get("links:#{shortcode}")
-		@clicks << r.get("clicks:#{shortcode}")
-		@timeouts << (r.ttl("links:#{shortcode}"))/seconds
+		@urls << r.GET("links:#{shortcode}")
+		@clicks << r.GET("clicks:#{shortcode}")
+		@timeouts << (r.TTL("links:#{shortcode}"))/seconds
 	end
 	erb :admin
 end
 
 get '/:shortcode' do
-	@url = r.get "links:#{params[:shortcode]}"
+	@url = r.GET "links:#{params[:shortcode]}"
 	if !@url.nil?
-		r.incr "clicks:#{params[:shortcode]}"
+		r.INCR "clicks:#{params[:shortcode]}"
 		redirect @url
 	else
 		flash[:error] = "Ups, Something went wrong!"
